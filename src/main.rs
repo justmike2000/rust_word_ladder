@@ -22,8 +22,7 @@ fn diff_one_shot(a: &str, b: &str) -> bool {
 fn find_next_words(node: &str, words: LinkedHashSet<String>) -> LinkedHashSet<String> {
     let mut v = LinkedHashSet::new();
     for word in words.iter() {
-        let m = diff_one_shot(node, word);
-        if m {
+        if diff_one_shot(node, word) {
             v.insert(word.to_string());
         }
     }
@@ -43,8 +42,9 @@ fn find_word_ladder(
     }
 
     // Build a Dequeue to store our nodes for BFS
+    let first_path: LinkedHashSet<_> = vec![begin_word.to_string()].into_iter().collect();
     let mut node_list: VecDeque<(String, LinkedHashSet<String>)> =
-        VecDeque::from([(begin_word.to_string(), word_list_set.clone())]);
+        VecDeque::from([(begin_word.to_string(), first_path)]);
 
     // Go huntin'
     while !node_list.is_empty() {
@@ -53,7 +53,7 @@ fn find_word_ladder(
             // Find words minus paths we already found
             let node_next_words = find_next_words(&node, word_list_set.clone());
             let next_words: LinkedHashSet<String> =
-                (&path - &node_next_words).iter().cloned().collect();
+                (&node_next_words - &path).iter().cloned().collect();
             // Iter those words
             for next in next_words.iter() {
                 // Solution??
@@ -63,6 +63,7 @@ fn find_word_ladder(
                     for p in path {
                         solution.insert(p);
                     }
+                    solution.insert(end_word.to_string());
                     return solution;
                 // No?  Add the next nodes for huntin'
                 } else {
