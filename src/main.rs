@@ -39,7 +39,6 @@ fn find_word_ladder(
     let mut word_list_set = LinkedHashSet::new();
     // Vec to LinkedHashSet
     for word in word_list.iter() {
-        println!("{}", word);
         word_list_set.insert(word.to_string());
     }
 
@@ -59,7 +58,6 @@ fn find_word_ladder(
             for next in next_words.iter() {
                 // Solution??
                 if next == end_word {
-                    println!("{:?}", path);
                     let mut solution = LinkedHashSet::new();
                     solution.insert(begin_word.to_string());
                     for p in path {
