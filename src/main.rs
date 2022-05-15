@@ -77,4 +77,6 @@ fn main() {
     let word_ladder = find_word_ladder(begin_word, end_word, word_list.to_vec());
     println!("Begin Word: {} End Word: {}", begin_word, end_word);
     println!("Solution: {:?}", word_ladder);
+    // Begin Word: hit End Word: cog
+    // Solution: ["hit", "hot", "dot", "dog", "lot", "log", "cog", "cog"]
 }
