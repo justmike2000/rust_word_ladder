@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 use std::collections::VecDeque;
 use std::iter::Iterator;
 
@@ -19,8 +19,8 @@ fn diff_one_shot(a: &str, b: &str) -> bool {
 }
 
 // Iters words we are matching on
-fn find_next_words(node: &str, words: Vec<&str>) -> HashSet<String> {
-    let mut v = HashSet::new();
+fn find_next_words(node: &str, words: Vec<&str>) -> BTreeSet<String> {
+    let mut v = BTreeSet::new();
     for word in words.iter() {
         let m = diff_one_shot(node, word);
         if m {
@@ -32,13 +32,15 @@ fn find_next_words(node: &str, words: Vec<&str>) -> HashSet<String> {
 
 // Find our word ladder of begin word to end word of one char diff.  Return Vec Solution.
 fn find_word_ladder(begin_word: &str, end_word: &str, word_list: Vec<&str>) -> Vec<String> {
-    // Turn our word list into hashset
-    let word_list_string_hashset: HashSet<String> =
-        word_list.iter().map(|s| s.to_string()).collect();
+    // Vec to BTreeSet
+    let mut word_list_set = BTreeSet::new();
+    for word in word_list.clone() {
+        word_list_set.insert(word.to_string());
+    }
 
     // Build a Dequeue to store our nodes for BFS
-    let mut node_list: VecDeque<(String, HashSet<String>)> =
-        VecDeque::from([(begin_word.to_string(), word_list_string_hashset)]);
+    let mut node_list: VecDeque<(String, BTreeSet<String>)> =
+        VecDeque::from([(begin_word.to_string(), word_list_set)]);
 
     // Go huntin'
     while !node_list.is_empty() {
@@ -46,7 +48,7 @@ fn find_word_ladder(begin_word: &str, end_word: &str, word_list: Vec<&str>) -> V
         if let Some((node, path)) = node_list.pop_front() {
             // Find words minus paths we already found
             let node_next_words = find_next_words(&node, word_list.to_vec());
-            let next_words: Vec<String> = (&path - &node_next_words).iter().cloned().collect();
+            let next_words: BTreeSet<String> = (&path - &node_next_words).iter().cloned().collect();
             // Iter those words
             for next in next_words.iter() {
                 // Solution??
