@@ -5,28 +5,26 @@ use std::iter::Iterator;
 // See if &str fidd by one character
 fn diff_one_shot(a: &str, b: &str) -> bool {
     if a.len() != b.len() {
-        false
-    } else {
-        let mut counter = 0;
-        for i in 0..a.len() {
-            let diff = a.chars().nth(i).unwrap() == b.chars().nth(i).unwrap();
-            if diff {
-                counter += 1;
-            }
-        }
-        counter == 2
+        return false
     }
+    let mut counter = 0;
+    for i in 0..a.len() {
+        if a.chars().nth(i).unwrap() == b.chars().nth(i).unwrap() {
+            counter += 1;
+        }
+    }
+    counter == 2
 }
 
 // Iters words we are matching on
 fn find_next_words(node: &str, words: LinkedHashSet<String>) -> LinkedHashSet<String> {
-    let mut v = LinkedHashSet::new();
+    let mut found_words = LinkedHashSet::new();
     for word in words.iter() {
         if diff_one_shot(node, word) {
-            v.insert(word.to_string());
+            found_words.insert(word.to_string());
         }
     }
-    v
+    found_words
 }
 
 // Find our word ladder of begin word to end word of one char diff.  Return Vec Solution.
